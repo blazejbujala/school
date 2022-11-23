@@ -1,5 +1,6 @@
 package com.ultimatesystem.school.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.Setter;
@@ -17,7 +18,7 @@ public class Student {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "studentId")
+    @Column(name = "student_id")
     private int studentId;
 
     @Column(name = "first_name")
@@ -43,8 +44,12 @@ public class Student {
     @Schema(name = "faculty", example = "economy")
     private String faculty;
 
-    @Column(name = "student_teachers")
+    @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    @JoinTable(
+            name = "students_teachers",
+            joinColumns = @JoinColumn(name = "student_id"),
+            inverseJoinColumns = @JoinColumn(name = "teacher_id")
+    )
     @Schema(name = "studentTeachers")
-    @ManyToMany(mappedBy = "teacherStudents")
     private List<Teacher> studentTeachers;
 }
